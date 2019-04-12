@@ -18,13 +18,13 @@ function buildHierarchy(csv){
 		let { agency_name, budget_function, budget_subfunction, federal_account_name } = csv[i]
 		let budgetTotal = csv[i].status_of_budgetary_resources_total;
 		let index = hasChild(children, agency_name)
-		if(index){
+		if(index > -1){
 			children = children[index]["children"];
 			index = hasChild(children, budget_function)
-			if(index){
+			if(index > -1){
 				children = children[index]["children"];
 				index = hasChild(children, budget_subfunction);
-				if(index){
+				if(index > -1){
 					children = children[index]["children"];
 					pushChild(children, [federal_account_name], budgetTotal);
 				} else {
@@ -42,10 +42,11 @@ function buildHierarchy(csv){
 		for (let j = 0; j < children.length; j++){
 			if(children[j]["name"] == nameCheck){
 				return j;
+			} else {
 			}
 		}
 		console.log("Life is a lie");
-		return false
+		return -1
 	}
 
 	function pushChild(parent, child, budgetTotal){
@@ -74,7 +75,6 @@ function buildHierarchy(csv){
 			parent.push({"name": child[3], "budget": budgetTotal})
 		}
 		if (i == 1){
-			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[3], "budget": budgetTotal})
 		}
 	}
