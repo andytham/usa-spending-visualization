@@ -17,41 +17,55 @@ function buildHierarchy(csv){
 		let children = root["children"];
 		let { agency_name, budget_function, budget_subfunction, federal_account_name } = csv[i]
 		let budgetTotal = csv[i].status_of_budgetary_resources_total;
-
-		if(hasChild(children, agency_name)){
-		
+		let index = hasChild(children, agency_name)
+		if(index){
+			children = children[index]["children"];
+			index = hasChild(children, budget_function)
+			if(index){
+				children = children[index]["children"];
+				index = hasChild(children, budget_subfunction);
+				if(index){
+					children = children[index]["children"];
+					pushChild(children, [federal_account_name], budgetTotal);
+				} else {
+					pushChild(children, [budget_subfunction, federal_account_name], budgetTotal);
+				}
+			} else {
+				pushChild(children, [budget_function, budget_subfunction, federal_account_name], budgetTotal);
+			}
 		} else {
-			pushChild(children, [agency_name, budget_function, budget_subfunction, federal_account_name], budgetTotal)
+			pushChild(children, [agency_name, budget_function, budget_subfunction, federal_account_name], budgetTotal);
 		}
 		
 	}
 	function hasChild(children, nameCheck){
 		for (let j = 0; j < children.length; j++){
 			if(children[j]["name"] == nameCheck){
-				return true
+				return j;
 			}
 		}
 		console.log("Life is a lie");
 		return false
 	}
+
 	function pushChild(parent, child, budgetTotal){
 		let i = child.length;
-		if(i > 0){
+		if(i > 3){
 			parent.push({"name": child[0], "children": []})
 		}
-		if(i > 1){
+		if(i > 2){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "children": []})
 		}
-		if (i > 2){
+		if (i > 1){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[2], "children": []})
 		}
-		if (i > 3){
+		if (i > 0){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[3], "budget": budgetTotal})
 		}
 	}
-	console.log(root);
+	console.log(JSON.stringify(root));
 	return root;
 }
