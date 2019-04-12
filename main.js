@@ -1,7 +1,9 @@
 let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
-
+let colors = {
+	"Department of Defense": "red"
+}
 let totalSize = 0; 
 let visualization = d3.select("#chart").append("svg:svg")
 	.attr("width", width)
@@ -99,26 +101,33 @@ function buildHierarchy(csv){
 	return root;
 }
 
+// create the actual visualization
 function createVisualization(json){
 	visualization.append("svg:circle")
 		.attr("r", radius)
 		.style("opacity", 0);
 
-	//hierarchy
+	//hierarchy off the json we created
 	let root = d3.hierarchy(json)
-		.sum(function(d){ return d.spending; }) // sum budget
+		.sum(function(d){ return d.spending; }) // use spending as criteria
 		.sort(function(a, b){ return b.value - a.value}); //order by descending
 	
 	let nodes	= partition(root).descendants()
 		.filter(function(d) {
-			return (d.x1 - d.x0 > 0.005);
+			return (d.x1 - d.x0 > 0.001); // radians lower limit?
 		});
 
+	// draws the "blocks" 
 	let path = visualization.data([json]).selectAll("path")
 		.data(nodes)
 		.enter().append("svg:path")
 		.attr("display", function(d){ return d.depth ? null : "none"; })
 		.attr("d", arc)
-		
-	totalSize = path.datum().value;
+		.attr("fill-rule", "evenodd")
+		.style("fill", function(d) { return colors[d.data.name] || "#AAA"; })
+		.style("opacity", 1)
+		//figure a way to cascade the colors down
+
+	totalSize = path.datum().value + 5;
 }
+
