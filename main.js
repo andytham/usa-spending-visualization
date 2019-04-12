@@ -50,18 +50,30 @@ function buildHierarchy(csv){
 
 	function pushChild(parent, child, budgetTotal){
 		let i = child.length;
-		if(i > 3){
+		if(i == 4){
 			parent.push({"name": child[0], "children": []})
-		}
-		if(i > 2){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "children": []})
-		}
-		if (i > 1){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[2], "children": []})
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[3], "budget": budgetTotal})
 		}
-		if (i > 0){
+		if(i == 3){
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[1], "children": []})
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[2], "children": []})
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[3], "budget": budgetTotal})
+		}
+		if (i == 2){
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[2], "children": []})
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[3], "budget": budgetTotal})
+		}
+		if (i == 1){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[3], "budget": budgetTotal})
 		}
