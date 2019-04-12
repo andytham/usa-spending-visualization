@@ -124,10 +124,46 @@ function createVisualization(json){
 		.attr("display", function(d){ return d.depth ? null : "none"; })
 		.attr("d", arc)
 		.attr("fill-rule", "evenodd")
-		.style("fill", function(d) { return colors[d.data.name] || "#AAA"; })
+		.style("fill", function(d) { return colors[d.data.name] || "#000"; })
 		.style("opacity", 1)
+		.on("mouseover", mouseover)
+		.on("mouseleave", mouseleave)
 		//figure a way to cascade the colors down
 
 	totalSize = path.datum().value + 5;
 }
 
+function mouseover(d){
+	// display percentage of total in center
+	let percentage = (100 * d.value / totalSize).toPrecision(3);
+	let percentageString = percentage + "%"
+	let details = {
+		name: d.data.name
+	}
+	d3.select("#percentage")
+		.text(percentageString);
+	d3.select("#details")
+		.text(details.name)
+		.style("visibility", "")
+	let sequenceArray = d.ancestors().reverse(); // place the data in reverse order in an array
+	sequenceArray.shift(); // remove root
+	
+	// fade all segments
+	d3.selectAll("path")
+		.style("opacity", 0.5)
+	// highlight mouseover segment and it's parent nodes
+	visualization.selectAll("path")
+		.filter(function(node){
+			return (sequenceArray.indexOf(node) >= 0);
+		})
+		.style("opacity", 1)
+
+}
+
+function mouseleave(d){
+	d3.selectAll("path")
+		.style("opacity", 1)
+	
+	d3.select("#details")
+		.style("visibility", "hidden")
+}
