@@ -62,20 +62,20 @@ function buildHierarchy(csv){
 		}
 		if(i == 3){
 			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[0], "children": []})
+			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "children": []})
 			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[2], "children": []})
-			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[3], "budget": budgetTotal})
+			parent.push({"name": child[2], "budget": budgetTotal})
 		}
 		if (i == 2){
 			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[2], "children": []})
+			parent.push({"name": child[0], "children": []})
 			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[3], "budget": budgetTotal})
+			parent.push({"name": child[1], "budget": budgetTotal})
 		}
 		if (i == 1){
-			parent.push({"name": child[3], "budget": budgetTotal})
+			parent.push({"name": child[0], "budget": budgetTotal})
 		}
 	}
 	console.log(JSON.stringify(root));
