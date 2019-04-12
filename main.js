@@ -17,37 +17,39 @@ function buildHierarchy(csv){
 		let children = root["children"];
 		let { agency_name, budget_function, budget_subfunction, federal_account_name } = csv[i]
 		let budgetTotal = csv[i].status_of_budgetary_resources_total;
-		if(children.includes(agency_name)){
-			children = agency_name["children"];
-			if (children.includes(budget_function)){
-				children = budget_function["children"];
-				if (children.includes(budget_subfunction)){
-					children = budget_subfunction["children"];
-					let account = {"name": federal_account_name, "budget": budgetTotal}
-					children.push(account)
-				} else {
-					children.push({"name": budget_subfunction, "children": []});
-					children = children["children"]
-					let account = {"name": federal_account_name, "budget": budgetTotal}
-					children.push(account)
-				}
-			} else {
-				children.push({"name": budget_function, "children": []})
-				children = children["children"]
-				children.push({"name": budget_subfunction, "children": []});
-				children = children["children"]
-				let account = {"name": federal_account_name, "budget": budgetTotal}
-				children.push(account)
-			}
+
+		if(hasChild(children, agency_name)){
+		
 		} else {
-			children.push({"name": agency_name, "children": []})
-			children = children["children"]
-			children.push({"name": budget_function, "children": []})
-			children = children["children"]
-			children.push({"name": budget_subfunction, "children": []});
-			children = children["children"]
-			let account = {"name": federal_account_name, "budget": budgetTotal}
-			children.push(account)
+			pushChild(children, [agency_name, budget_function, budget_subfunction, federal_account_name], budgetTotal)
+		}
+		
+	}
+	function hasChild(children, nameCheck){
+		for (let j = 0; j < children.length; j++){
+			if(children[j]["name"] == nameCheck){
+				return true
+			}
+		}
+		console.log("Life is a lie");
+		return false
+	}
+	function pushChild(parent, child, budgetTotal){
+		let i = child.length;
+		if(i > 0){
+			parent.push({"name": child[0], "children": []})
+		}
+		if(i > 1){
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[1], "children": []})
+		}
+		if (i > 2){
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[2], "children": []})
+		}
+		if (i > 3){
+			parent = parent[parent.length - 1]["children"]
+			parent.push({"name": child[3], "budget": budgetTotal})
 		}
 	}
 	console.log(root);
