@@ -1,6 +1,8 @@
 let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
+
+let totalSize = 0; 
 let visualization = d3.select("#chart").append("svg:svg")
 	.attr("width", width)
 	.attr("height", height)
@@ -22,6 +24,7 @@ d3.text("fed-og.csv", function(text){
 	let csv = d3.csvParse(text);
 
 	let json = buildHierarchy(csv);
+	createVisualization(json);
 })
 
 
@@ -73,7 +76,7 @@ function buildHierarchy(csv){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[2], "children": []})
 			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[3], "budget": budgetTotal})
+			parent.push({"name": child[3], "spending": budgetTotal})
 		}
 		if(i == 3){
 			parent = parent[parent.length - 1]["children"]
@@ -81,22 +84,41 @@ function buildHierarchy(csv){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "children": []})
 			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[2], "budget": budgetTotal})
+			parent.push({"name": child[2], "spending": budgetTotal})
 		}
 		if (i == 2){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[0], "children": []})
 			parent = parent[parent.length - 1]["children"]
-			parent.push({"name": child[1], "budget": budgetTotal})
+			parent.push({"name": child[1], "spending": budgetTotal})
 		}
 		if (i == 1){
-			parent.push({"name": child[0], "budget": budgetTotal})
+			parent.push({"name": child[0], "spending": budgetTotal})
 		}
 	}
-	console.log(JSON.stringify(root));
 	return root;
 }
 
-function createVisualization(){
+function createVisualization(json){
+	visualization.append("svg:circle")
+		.attr("r", radius)
+		.style("opacity", 0);
+
+	//hierarchy
+	let root = d3.hierarchy(json)
+		.sum(function(d){ return d.spending; }) // sum budget
+		.sort(function(a, b){ return b.value - a.value}); //order by descending
 	
+	let nodes	= partition(root).descendants()
+		.filter(function(d) {
+			return (d.x1 - d.x0 > 0.005);
+		});
+
+	let path = visualization.data([json]).selectAll("path")
+		.data(nodes)
+		.enter().append("svg:path")
+		.attr("display", function(d){ return d.depth ? null : "none"; })
+		.attr("d", arc)
+		
+	totalSize = path.datum().value;
 }
