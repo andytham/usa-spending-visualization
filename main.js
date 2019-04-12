@@ -1,13 +1,29 @@
 let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
+let visualization = d3.select("#chart").append("svg:svg")
+	.attr("width", width)
+	.attr("height", height)
+	.append("svg:g")
+	.attr("id", "container")
+	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+let partition = d3.partition()
+	.size([2 * Math.PI, radius * radius]);
+
+let arc = d3.arc()
+	.startAngle(function(d){ return d.x0; })
+	.endAngle(function(d){ return d.x1; })
+	.innerRadius(function(d){ return Math.sqrt(d.y0); })
+	.outerRadius(function(d){ return Math.sqrt(d.y1); });
+
 
 d3.text("fed-og.csv", function(text){
 	let csv = d3.csvParse(text);
-	console.log(csv);
 
 	let json = buildHierarchy(csv);
 })
+
 
 // parse through the CSV and create a JSON hierarchy for d3 to use
 function buildHierarchy(csv){
@@ -45,7 +61,6 @@ function buildHierarchy(csv){
 			} else {
 			}
 		}
-		console.log("Life is a lie");
 		return -1
 	}
 
@@ -80,4 +95,8 @@ function buildHierarchy(csv){
 	}
 	console.log(JSON.stringify(root));
 	return root;
+}
+
+function createVisualization(){
+	
 }
