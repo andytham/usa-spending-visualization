@@ -1,0 +1,4 @@
+/* makes the chart look clean as heck */
+#chart path {
+  stroke: #fff;
+}

@@ -1,5 +1,5 @@
-let width = 500;
-let height = 500;
+let width = 800;
+let height = 800;
 let radius = Math.min(width, height) / 2;
 var color = "#9b288f"
 let colors = {
@@ -37,6 +37,7 @@ d3.text("fed-og.csv", function(text){
 
 
 // parse through the CSV and create a JSON hierarchy for d3 to use
+// there should be a way to make this cleaner
 function buildHierarchy(csv){
 	let root = {"name": "root", "children": []};
 
@@ -101,6 +102,7 @@ function buildHierarchy(csv){
 			parent.push({"name": child[0], "spending": budgetTotal})
 		}
 	}
+	// console.log(JSON.stringify(root));
 	return root;
 }
 
@@ -128,13 +130,13 @@ function createVisualization(json){
 		.attr("display", function(d){ return d.depth ? null : "none"; })
 		.attr("d", arc)
 		.attr("fill-rule", "evenodd")
-		.style("fill", function(d) { return colors[d.data.name] || "#000"; })
+		.style("fill", function(d) { return colors[d.data.name] || "#666"; })
 		.style("opacity", 1)
 		.on("mouseover", mouseover)
 		.on("mouseleave", mouseleave)
-		//figure a way to cascade the colors down
 
-	totalSize = path.datum().value + 5;
+		
+	totalSize = path.datum().value;
 }
 
 function mouseover(d){
