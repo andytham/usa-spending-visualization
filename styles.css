@@ -19,12 +19,18 @@
   text-align: center;
   width: 150px;
   height: 50px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #details, #cash {
+  max-width: 500px;
+  text-align: center;
+  margin: 5px auto;
   position: relative;
   display: flex;
   justify-content: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.1em;
 }
 
 /*# sourceMappingURL=styles.css.map */
