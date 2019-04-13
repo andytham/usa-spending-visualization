@@ -28,7 +28,7 @@ let arc = d3.arc()
 	.outerRadius(function(d){ return Math.sqrt(d.y1); });
 
 
-d3.text("fed-og.csv", function(text){
+d3.text("2018.csv", function(text){
 	let csv = d3.csvParse(text);
 
 	let json = buildHierarchy(csv);
@@ -238,7 +238,6 @@ update: function(nodeArray, percentageString) {
       .attr("dy", "0.35em")
       .attr("text-anchor", "left")
 			.text(function(d) { return d.data.name; })
-      .style("fill", "#AAA");
 
   // How the subsequent nodes will appear
   entering.merge(trail).attr("transform", function(d, i) {
