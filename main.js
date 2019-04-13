@@ -1,7 +1,7 @@
 let width = 800;
 let height = 800;
 let radius = Math.min(width, height) / 2;
-var color = "#9b288f"
+var color = d3.scaleOrdinal(d3.schemeAccent);
 let colors = {
 	"Department of the Treasury": "green",
 	"Department of Defense": "blue",
@@ -124,13 +124,16 @@ function createVisualization(json){
 		});
 
 	// draws the "blocks" 
+	
+	color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 10))
 	let path = visualization.data([json]).selectAll("path")
 		.data(nodes)
 		.enter().append("svg:path")
 		.attr("display", function(d){ return d.depth ? null : "none"; })
 		.attr("d", arc)
 		.attr("fill-rule", "evenodd")
-		.style("fill", function(d) { return colors[d.data.name] || "#666"; })
+		// .style("fill", function(d) { return colors[d.data.name] || color(d); })
+		.style("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name)})
 		.style("opacity", 1)
 		.on("mouseover", mouseover)
 		.on("mouseleave", mouseleave)
