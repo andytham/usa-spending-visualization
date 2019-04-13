@@ -149,11 +149,20 @@ function mouseover(d){
 	let details = {
 		name: d.data.name
 	}
+	function parseNum(num){
+		let result = num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+		return "$" + result
+	}
 	d3.select("#percentage")
-		.text(percentageString);
+		.text(percentageString)
+		.style("visibility", "")
 	d3.select("#details")
 		.text(details.name)
 		.style("visibility", "")
+	d3.select("#cash")
+		.text(parseNum(d.value))
+		.style("visibility", "")
+
 	let sequenceArray = d.ancestors().reverse(); // place the data in reverse order in an array
 	sequenceArray.shift(); // remove root
 	
