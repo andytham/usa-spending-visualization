@@ -25,11 +25,25 @@ body{
     font-size: 1.2em;
   }
 }
-
+#sequence{
+  position: relative;
+  left: 520px;
+  margin: 0 auto;
+  top: 300px;
+  width: 500px;
+  overflow: hidden;
+  #trail{
+    width: 500px;
+    overflow: visible;
+  }
+}
 #percentage{
   position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
   top: -270px;
-  left: 780px;
+  // left: 780px;
   font-size: 2em;
   text-align: center;
   width: 150px;
@@ -46,13 +60,4 @@ body{
   font-size: 1.1em;
 }
 
-#sequence{
-  position: relative;
-  left: 1120px;
-  top: 300px;
-  width: 500px;
-  #trail{
-    width: 500px;
-    overflow: visible;
-  }
-}
+
