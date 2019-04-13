@@ -1,8 +1,12 @@
 let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
+var color = "#9b288f"
 let colors = {
-	"Department of Defense": "red"
+	"Department of the Treasury": "green",
+	"Department of Defense": "blue",
+	"Health": color
+	
 }
 let totalSize = 0; 
 let visualization = d3.select("#chart").append("svg:svg")
@@ -103,6 +107,7 @@ function buildHierarchy(csv){
 
 // create the actual visualization
 function createVisualization(json){
+	breadcrumbs.initialize();
 	visualization.append("svg:circle")
 		.attr("r", radius)
 		.style("opacity", 0);
@@ -148,6 +153,7 @@ function mouseover(d){
 	let sequenceArray = d.ancestors().reverse(); // place the data in reverse order in an array
 	sequenceArray.shift(); // remove root
 	
+  breadcrumbs.update(sequenceArray, percentageString);
 	// fade all segments
 	d3.selectAll("path")
 		.style("opacity", 0.5)
@@ -166,4 +172,71 @@ function mouseleave(d){
 	
 	d3.select("#details")
 		.style("visibility", "hidden")
+}
+// Breadcrumb dimensions: width, height, spacing, width of tip/tail.
+let b = {
+  w: 160, h: 30, s: 3, t: 10
+};
+
+let breadcrumbs = {
+initialize: function () {
+  // Add the svg area.
+  var trail = d3.select("#sequence").append("svg:svg")
+      // .attr("width", width * 3)
+      // .attr("height", 50)
+      .attr("id", "trail");
+  // Add the label at the end, for the percentage.
+  trail.append("svg:text")
+    .attr("id", "endlabel")
+    .style("fill", "#000");
+},
+
+// The points of the polygon surrounding the label
+breadcrumbPoints: function(d, i) {
+  var points = [];
+  points.push("0,0");
+  points.push(b.w + ",0");
+  points.push(b.w + "," + b.h);
+  points.push("0," + b.h);
+  return points.join(" ");
+},
+
+// Update the breadcrumb trail to show the current sequence and percentage.
+update: function(nodeArray, percentageString) {
+
+  // Data join; key function combines name and depth (= position in sequence).
+  var trail = d3.select("#trail")
+      .selectAll("g")
+      .data(nodeArray, function(d) { return d.data.name + d.depth; });
+
+  // Remove exiting nodes.
+  trail.exit().remove();
+
+  // Add breadcrumb and label for entering nodes.
+  var entering = trail.enter().append("svg:g");
+
+	
+  entering.append("svg:polygon")
+  //     .attr("points", breadcrumbs.breadcrumbPoints)
+			.style("fill", function(d) { return colors[d.data.name]; })
+
+  entering.append("svg:text")
+      // .attr("x", (b.w + b.t) / 2)
+			// .attr("y", b.h / 2)
+			.attr("x", 0)
+			.attr("y", b.h / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "left")
+			.text(function(d) { return d.data.name; })
+      .style("fill", "#AAA");
+
+  // How the subsequent nodes will appear
+  entering.merge(trail).attr("transform", function(d, i) {
+    return "translate(0,"+ i * (b.h) + ")";
+  });
+
+  // In case invisible
+  d3.select("#trail")
+      .style("visibility", "");
+	}
 }
