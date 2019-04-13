@@ -1,3 +1,7 @@
+body{
+  
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 /* makes the chart look clean as heck */
 #chart {
   display: flex;
@@ -10,7 +14,17 @@
     margin: 0 auto;
   }
 }
-
+#header{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 100px;
+  #title{
+    font-size: 1.2em;
+  }
+}
 
 #percentage{
   position: relative;
@@ -20,7 +34,6 @@
   text-align: center;
   width: 150px;
   height: 50px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #details, #cash{
@@ -30,7 +43,6 @@
   position: relative;
   display: flex;
   justify-content: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 1.1em;
 }
 
@@ -38,7 +50,6 @@
   position: relative;
   left: 1120px;
   top: 300px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
   width: 500px;
   #trail{
     width: 500px;

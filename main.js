@@ -1,6 +1,7 @@
 let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
+let year = 2018; // setup to be able to swap years
 var color = d3.scaleOrdinal(d3.schemeAccent);
 let colors = {
 	"Department of the Treasury": "green",
@@ -28,13 +29,15 @@ let arc = d3.arc()
 	.outerRadius(function(d){ return Math.sqrt(d.y1); });
 
 
-d3.text("2018.csv", function(text){
+d3.text(year + ".csv", function(text){
 	let csv = d3.csvParse(text);
 
 	let json = buildHierarchy(csv);
 	createVisualization(json);
 })
 
+d3.select("#title")
+	.text("How Did the U.S. Spend Its Money? (" + year + ")")
 
 // parse through the CSV and create a JSON hierarchy for d3 to use
 // there should be a way to make this cleaner
@@ -108,6 +111,11 @@ function buildHierarchy(csv){
 
 // create the actual visualization
 function createVisualization(json){
+	let sum = d3.hierarchy(json)
+	.sum(d => d.spending)
+	d3.select("#total")
+		.text("Total Money Spent: " + parseNum(sum.value))
+
 	breadcrumbs.initialize();
 	visualization.append("svg:circle")
 		.attr("r", radius)
@@ -123,8 +131,8 @@ function createVisualization(json){
 			return (d.x1 - d.x0 > 0.001); // radians lower limit?
 		});
 
-	// draws the "blocks" 
-	
+		console.log(sum);
+	// draws the "blocks"
 	color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 10))
 	let path = visualization.data([json]).selectAll("path")
 		.data(nodes)
@@ -149,10 +157,7 @@ function mouseover(d){
 	let details = {
 		name: d.data.name
 	}
-	function parseNum(num){
-		let result = num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-		return "$" + result
-	}
+
 	d3.select("#percentage")
 		.text(percentageString)
 		.style("visibility", "")
@@ -190,7 +195,10 @@ function mouseleave(d){
 let b = {
   w: 160, h: 30, s: 3, t: 10
 };
-
+function parseNum(num){
+	let result = num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+	return "$" + result
+}
 let breadcrumbs = {
 initialize: function () {
   // Add the svg area.
