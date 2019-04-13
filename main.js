@@ -1,5 +1,5 @@
-let width = 800;
-let height = 800;
+let width = 500;
+let height = 500;
 let radius = Math.min(width, height) / 2;
 var color = d3.scaleOrdinal(d3.schemeAccent);
 let colors = {
