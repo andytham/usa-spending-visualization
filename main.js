@@ -5,7 +5,9 @@ var color = "#9b288f"
 let colors = {
 	"Department of the Treasury": "green",
 	"Department of Defense": "blue",
-	"Health": color
+	"Health": color,
+	"Social Security": "orange",
+	"Medicare": "pink"
 	
 }
 let totalSize = 0; 
@@ -40,16 +42,16 @@ function buildHierarchy(csv){
 
 	for (let i = 0; i < csv.length; i++){
 		let children = root["children"];
-		let { agency_name, budget_function, budget_subfunction, federal_account_name } = csv[i]
+		let { agency_name, budget_function, budget_subfunction, federal_account_name } = csv[i] || "N/A"
 		let budgetTotal = csv[i].status_of_budgetary_resources_total;
 		let index = hasChild(children, agency_name)
-		if(index > -1){
+		if(index != -1){ // has same agency name?
 			children = children[index]["children"];
 			index = hasChild(children, budget_function)
-			if(index > -1){
+			if(index != -1){ // has same budget function?
 				children = children[index]["children"];
 				index = hasChild(children, budget_subfunction);
-				if(index > -1){
+				if(index != -1){ // has same budget sub function?
 					children = children[index]["children"];
 					pushChild(children, [federal_account_name], budgetTotal);
 				} else {
@@ -67,7 +69,6 @@ function buildHierarchy(csv){
 		for (let j = 0; j < children.length; j++){
 			if(children[j]["name"] == nameCheck){
 				return j;
-			} else {
 			}
 		}
 		return -1
@@ -75,7 +76,7 @@ function buildHierarchy(csv){
 
 	function pushChild(parent, child, budgetTotal){
 		let i = child.length;
-		if(i == 4){
+		if(i == 4){ //agency name
 			parent.push({"name": child[0], "children": []})
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "children": []})
@@ -84,16 +85,14 @@ function buildHierarchy(csv){
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[3], "spending": budgetTotal})
 		}
-		if(i == 3){
-			parent = parent[parent.length - 1]["children"]
+		if(i == 3){ // budget function
 			parent.push({"name": child[0], "children": []})
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "children": []})
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[2], "spending": budgetTotal})
 		}
-		if (i == 2){
-			parent = parent[parent.length - 1]["children"]
+		if (i == 2){ //budget sub function
 			parent.push({"name": child[0], "children": []})
 			parent = parent[parent.length - 1]["children"]
 			parent.push({"name": child[1], "spending": budgetTotal})
@@ -214,15 +213,12 @@ update: function(nodeArray, percentageString) {
 
   // Add breadcrumb and label for entering nodes.
   var entering = trail.enter().append("svg:g");
-
 	
   entering.append("svg:polygon")
   //     .attr("points", breadcrumbs.breadcrumbPoints)
 			.style("fill", function(d) { return colors[d.data.name]; })
 
   entering.append("svg:text")
-      // .attr("x", (b.w + b.t) / 2)
-			// .attr("y", b.h / 2)
 			.attr("x", 0)
 			.attr("y", b.h / 2)
       .attr("dy", "0.35em")
