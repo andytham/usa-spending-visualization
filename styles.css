@@ -2,19 +2,29 @@
 #chart {
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }
 #chart path {
   stroke: #fff;
 }
-#chart svg {
+#chart > svg {
   margin: 0 auto;
 }
 
 #percentage {
-  position: absolute;
-  top: 378px;
-  left: 800px;
+  position: relative;
+  top: -270px;
+  left: 780px;
   font-size: 2em;
+  text-align: center;
+  width: 150px;
+  height: 50px;
+}
+
+#details {
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 /*# sourceMappingURL=styles.css.map */
