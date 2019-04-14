@@ -160,14 +160,14 @@ function mouseover(d){
 
 	d3.select("#percentage")
 		.text(percentageString)
-		.style("visibility", "")
 	d3.select("#details")
 		.text(details.name)
-		.style("visibility", "")
 	d3.select("#cash")
 		.text(parseNum(d.value))
+		
+	d3.selectAll("#details, #cash, #percentage")
 		.style("visibility", "")
-
+	
 	let sequenceArray = d.ancestors().reverse(); // place the data in reverse order in an array
 	sequenceArray.shift(); // remove root
 	
@@ -188,8 +188,9 @@ function mouseleave(d){
 	d3.selectAll("path")
 		.style("opacity", 1)
 	
-	d3.select("#details")
-		.style("visibility", "hidden")
+	d3.selectAll("#details, #cash, #percentage, #trail")
+		.style("visibility", "hidden");
+	
 }
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 let b = {
