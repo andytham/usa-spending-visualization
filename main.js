@@ -131,7 +131,7 @@ function createVisualization(json){
 			return (d.x1 - d.x0 > 0.001); // radians lower limit?
 		});
 
-		console.log(sum);
+		// console.log(sum);
 	// draws the "blocks"
 	color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 10))
 	let path = visualization.data([json]).selectAll("path")
@@ -201,6 +201,32 @@ function parseNum(num){
 	let result = num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 	return "$" + result
 }
+
+// wrap long text https://bl.ocks.org/mbostock/7555321
+function wrap(text, width){
+	text.each(function(){
+		let text = d3.select(this),
+		words = text.text().split(/\s+/).reverse(),
+		word,
+		line = [],
+		lineNumber = 0,
+		lineHeight = 1.1,
+		y = text.attr("y"),
+		dy = parseFloat(text.attr("dy")),
+		tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+		while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+      }
+    }
+	})
+}
+
 let breadcrumbs = {
 initialize: function () {
   // Add the svg area.
@@ -254,8 +280,12 @@ update: function(nodeArray, percentageString) {
     return "translate(0,"+ i * (b.h) + ")";
   });
 
-  // In case invisible
+	// In case invisible
+	let x = d3.scaleBand()
+    .rangeRound([0, width], .1, .3);
   d3.select("#trail")
-      .style("visibility", "");
+			.style("visibility", "")
+			.selectAll("text")
+			.call(wrap, x.bandwidth());
 	}
 }
