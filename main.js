@@ -197,6 +197,7 @@ let b = {
   w: 160, h: 30, s: 3, t: 10
 };
 function parseNum(num){
+	//https://stackoverflow.com/questions/149055/how-can-i-format-numbers-as-dollars-currency-string-in-javascript
 	let result = num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 	return "$" + result
 }
