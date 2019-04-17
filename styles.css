@@ -10,6 +10,7 @@ body {
 }
 #chart path {
   stroke: #fff;
+  stroke-width: 0.7px;
   transition: opacity 0.5s;
 }
 #chart > svg {

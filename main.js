@@ -105,6 +105,7 @@ function buildHierarchy(csv){
 function createVisualization(json){
 	let sum = d3.hierarchy(json)
 	.sum(d => d.spending)
+
 	d3.select("#total")
 		.text("Total Money Spent: " + parseNum(sum.value))
 
@@ -125,6 +126,7 @@ function createVisualization(json){
 
 		// console.log(sum);
 	// draws the "blocks"
+	//there are 95 children but are too small to see, 30 is about all that is visible
 	let color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30))
 	let path = visualization.data([json]).selectAll("path")
 		.data(nodes)

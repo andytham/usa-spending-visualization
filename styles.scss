@@ -9,6 +9,7 @@ body{
   flex-direction: column;
   path {
     stroke: #fff;
+    stroke-width: .7px;
     transition: opacity 0.5s;
   }
   > svg{
