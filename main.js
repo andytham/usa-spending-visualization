@@ -133,14 +133,14 @@ function createVisualization(json){
 		.enter().append("svg:path")
 		.attr("display", function(d){ return d.depth ? null : "none"; })
 		.attr("d", arc)
-		.attr("fill-rule", "evenodd")
+		// .attr("fill-rule", "evenodd")
 		// .style("fill", function(d) { return colors[d.data.name] || color(d); })
 		.style("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name)})
+		.attr("fill-opacity", d => 2.5 / d.depth)
 		.style("opacity", 1)
 		.on("mouseover", mouseover)
 		.on("mouseleave", mouseleave)
 
-		
 	totalSize = path.datum().value;
 }
 
