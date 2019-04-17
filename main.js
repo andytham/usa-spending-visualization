@@ -2,15 +2,7 @@ let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
 let year = 2018; // setup to be able to swap years
-var color = d3.scaleOrdinal(d3.schemeAccent);
-let colors = {
-	"Department of the Treasury": "green",
-	"Department of Defense": "blue",
-	"Health": color,
-	"Social Security": "orange",
-	"Medicare": "pink"
-	
-}
+
 let totalSize = 0; 
 let visualization = d3.select("#chart").append("svg:svg")
 	.attr("width", width)
@@ -133,7 +125,7 @@ function createVisualization(json){
 
 		// console.log(sum);
 	// draws the "blocks"
-	color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 10))
+	let color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30))
 	let path = visualization.data([json]).selectAll("path")
 		.data(nodes)
 		.enter().append("svg:path")
@@ -266,7 +258,7 @@ update: function(nodeArray, percentageString) {
 	
   entering.append("svg:polygon")
   //     .attr("points", breadcrumbs.breadcrumbPoints)
-			.style("fill", function(d) { return colors[d.data.name]; })
+			// .style("fill", function(d) { return color(d.data.name)})
 
   entering.append("svg:text")
 			.attr("x", 0)
