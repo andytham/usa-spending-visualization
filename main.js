@@ -102,6 +102,7 @@ function buildHierarchy(csv){
 }
 
 // create the actual visualization
+var root;
 function createVisualization(json){
 	let sum = d3.hierarchy(json)
 	.sum(d => d.spending)
@@ -115,7 +116,7 @@ function createVisualization(json){
 		.style("opacity", 0);
 
 	//hierarchy off the json we created
-	let root = d3.hierarchy(json)
+	root = d3.hierarchy(json)
 		.sum(function(d){ return d.spending; }) // use spending as criteria
 		.sort(function(a, b){ return b.value - a.value}); //order by descending
 	console.log(root);
@@ -130,7 +131,8 @@ console.log(nodes);
 	let color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30))
 	var path = visualization.data([json]).selectAll("path")
 		.data(nodes)
-		.enter().append("svg:path")
+		// .enter().append("svg:path")
+		.join("path")
 		.attr("display", function(d){ return d.depth ? null : "none"; })
 		.attr("d", (d)=>{ return arc(d)})
 		// .attr("fill-rule", "evenodd")
@@ -140,7 +142,10 @@ console.log(nodes);
 		.style("opacity", 1)
 		.on("mouseover", mouseover)
 		.on("mouseleave", mouseleave)
-		.on("click", onClick)
+		
+		path.filter(d => d.children)
+		.style("cursor", "pointer")
+		.on("click", clicked);
 	
 		console.log(path);
 	totalSize = path.datum().value;
@@ -189,26 +194,27 @@ function mouseleave(d){
 	
 }
 
-function onClick(d){
-	let values = d.each(d => arc(d));
-	console.log(values);
-	d.name = "root";
-	let root = d3.hierarchy(d)
-	.sum(function(d){ return d.spending; }) // use spending as criteria
-	.sort(function(a, b){ return b.value - a.value}); //order by descending
+function clicked(p){
+// 	let root = d3.hierarchy(d)
+// 	.sum(function(d){ return d.spending; }) // use spending as criteria
+// 	.sort(function(a, b){ return b.value - a.value}); //order by descending
+// // console.log(root);
 // console.log(root);
-let nodes	= partition(root).descendants()
-	.filter(function(d) {
-		// return (d.x1 - d.x0 > 0.001); // radians lower limit?
-		return d;
-	});
-	// console.log(nodes);
-	let count = 0;
-	// parent.datum(d.parent);
-	let poop = d
+// let nodes	= partition(root).descendants()
+// 	.filter(function(d) {
+// 		// return (d.x1 - d.x0 > 0.001); // radians lower limit?
+// 		return d;
+// 	});
+// 	console.log(nodes);
+	root.each(d => {
+		console.log(d)
+			return d.target = {
+		x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+		x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+		y0: Math.max(0, d.y0 - p.depth),
+		y1: Math.max(0, d.y1 - p.depth)
+	}});
 	let path = d3.select("#container").selectAll("path")
-	let g = d3.selectAll("g");
-	// console.log(path);
 	path = d3.select("#container").selectAll("path")
 	
 	path
