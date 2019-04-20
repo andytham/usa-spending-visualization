@@ -118,21 +118,21 @@ function createVisualization(json){
 	let root = d3.hierarchy(json)
 		.sum(function(d){ return d.spending; }) // use spending as criteria
 		.sort(function(a, b){ return b.value - a.value}); //order by descending
-	
+	console.log(root);
 	let nodes	= partition(root).descendants()
 		.filter(function(d) {
 			return (d.x1 - d.x0 > 0.001); // radians lower limit?
 		});
-
+console.log(nodes);
 		// console.log(sum);
 	// draws the "blocks"
 	//there are 95 children but are too small to see, 30 is about all that is visible
 	let color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30))
-	let path = visualization.data([json]).selectAll("path")
+	var path = visualization.data([json]).selectAll("path")
 		.data(nodes)
 		.enter().append("svg:path")
 		.attr("display", function(d){ return d.depth ? null : "none"; })
-		.attr("d", arc)
+		.attr("d", (d)=>{ return arc(d)})
 		// .attr("fill-rule", "evenodd")
 		// .style("fill", function(d) { return colors[d.data.name] || color(d); })
 		.style("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name)})
@@ -140,7 +140,9 @@ function createVisualization(json){
 		.style("opacity", 1)
 		.on("mouseover", mouseover)
 		.on("mouseleave", mouseleave)
-
+		.on("click", onClick)
+	
+		console.log(path);
 	totalSize = path.datum().value;
 }
 
@@ -185,6 +187,48 @@ function mouseleave(d){
 	d3.selectAll("#details, #cash, #percentage, #trail")
 		.style("visibility", "hidden");
 	
+}
+
+function onClick(d){
+	let values = d.each(d => arc(d));
+	console.log(values);
+	d.name = "root";
+	let root = d3.hierarchy(d)
+	.sum(function(d){ return d.spending; }) // use spending as criteria
+	.sort(function(a, b){ return b.value - a.value}); //order by descending
+// console.log(root);
+let nodes	= partition(root).descendants()
+	.filter(function(d) {
+		// return (d.x1 - d.x0 > 0.001); // radians lower limit?
+		return d;
+	});
+	// console.log(nodes);
+	let count = 0;
+	// parent.datum(d.parent);
+	let poop = d
+	let path = d3.select("#container").selectAll("path")
+	let g = d3.selectAll("g");
+	// console.log(path);
+	path = d3.select("#container").selectAll("path")
+	
+	path
+	.transition()
+        .tween("data", d => {
+          const i = d3.interpolate(d.current, d.target);
+					console.log(d);
+          return t => d.current = i(t);
+        })
+      .filter(function(d) {
+        return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+      })
+	.attr("d", (d)=>{return arc(d)})
+	// .attr("d", arc(d))
+	.style("fill", "red")
+	.attr("fill-opacity",d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0)
+	// .style("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name)})
+
+
+
 }
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 let b = {
