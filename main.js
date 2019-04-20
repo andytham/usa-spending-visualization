@@ -21,7 +21,7 @@ let arc = d3.arc()
 	.outerRadius(function(d){ return Math.sqrt(d.y1); });
 
 
-d3.text(year + ".csv", function(text){
+d3.text(year + ".csv").then((text) => {
 	let csv = d3.csvParse(text);
 
 	let json = buildHierarchy(csv);
@@ -212,15 +212,6 @@ let nodes	= partition(root).descendants()
 	path = d3.select("#container").selectAll("path")
 	
 	path
-	.transition()
-        .tween("data", d => {
-          const i = d3.interpolate(d.current, d.target);
-					console.log(d);
-          return t => d.current = i(t);
-        })
-      .filter(function(d) {
-        return +this.getAttribute("fill-opacity") || arcVisible(d.target);
-      })
 	.attr("d", (d)=>{return arc(d)})
 	// .attr("d", arc(d))
 	.style("fill", "red")
