@@ -15,9 +15,8 @@ function changeYear(e){
 		let json = buildHierarchy(csv);
 		createVisualization(json);
 	})
-	console.log(year);
-	
 }
+
 
 let totalSize = 0; 
 let visualization = d3.select("#chart").append("svg:svg")
@@ -125,9 +124,11 @@ function createVisualization(json){
 		.text("Total Money Spent: " + parseNum(sum.value))
 
 	breadcrumbs.initialize();
-	visualization.append("svg:circle")
-		.attr("r", radius)
-		.style("opacity", 0);
+
+	// this was interfering with clicking the circle
+	// visualization.append("svg:circle")
+	// 	.attr("r", radius)
+	// 	.style("opacity", 0);
 
 	//hierarchy off the json we created
 	root = d3.hierarchy(json)
@@ -159,13 +160,16 @@ console.log(nodes);
 		
 		path.filter(d => d.children)
 		.style("cursor", "pointer")
-		.on("click", clicked);
-	
+		.on("click", clicked)
+		// .on("click", ()=>{console.log("click");})
+		// .on("click", ()=>{console.log("click2");})
+
 		console.log(path);
 	totalSize = path.datum().value;
 }
 
 function mouseover(d){
+	console.log("mousing over");
 	// display percentage of total in center
 	let percentage = (100 * d.value / totalSize).toPrecision(3);
 	let percentageString = percentage + "%"
