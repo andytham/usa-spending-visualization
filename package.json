@@ -1,0 +1,32 @@
+{
+  "name": "usa-spending-visualization",
+  "version": "1.0.0",
+  "description": "- https://www.nationalpriorities.org/budget-basics/federal-budget-101/spending/\r - https://www.usaspending.gov/\r - https://observablehq.com/@d3/sunburst\r - https://observablehq.com/@mbostock/working-with-color\r - https://bl.ocks.org/kerryrodden/7090426\r - https://observablehq.com/@d3/zoomable-sunburst\r # TODO\r - Setup for other years\r - Zoom in (\r - https://observablehq.com/@d3/zoomable-sunburst)\r - Add wrapping for breadcrumbs",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack --mode development",
+    "watch": "webpack --watch --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andytham/usa-spending-visualization.git"
+  },
+  "author": "andytham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andytham/usa-spending-visualization/issues"
+  },
+  "homepage": "https://github.com/andytham/usa-spending-visualization#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "babel-loader": "^8.0.5",
+    "mini-css-extract-plugin": "^0.6.0",
+    "sass-loader": "^7.1.0",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  }
+}
