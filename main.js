@@ -2,6 +2,22 @@ let width = 500;
 let height = 500;
 let radius = Math.min(width, height) / 2;
 let year = 2018; // setup to be able to swap years
+d3.select("#title")
+	.text("How Did the U.S. Spend Its Money? (" + year + ")")
+function changeYear(e){
+	year = e.target.innerHTML;
+	d3.select("#title")
+	.text("How Did the U.S. Spend Its Money? (" + year + ")")
+	d3.select('#container').select("path").remove();
+
+	d3.text(year + ".csv").then((text) => {
+		let csv = d3.csvParse(text);
+		let json = buildHierarchy(csv);
+		createVisualization(json);
+	})
+	console.log(year);
+	
+}
 
 let totalSize = 0; 
 let visualization = d3.select("#chart").append("svg:svg")
@@ -23,13 +39,11 @@ let arc = d3.arc()
 
 d3.text(year + ".csv").then((text) => {
 	let csv = d3.csvParse(text);
-
 	let json = buildHierarchy(csv);
 	createVisualization(json);
 })
 
-d3.select("#title")
-	.text("How Did the U.S. Spend Its Money? (" + year + ")")
+
 
 // parse through the CSV and create a JSON hierarchy for d3 to use
 // there should be a way to make this cleaner
@@ -264,7 +278,8 @@ function wrap(text, width){
 
 let breadcrumbs = {
 initialize: function () {
-  // Add the svg area.
+	// Add the svg area.
+	d3.select("#trail").remove()
   var trail = d3.select("#sequence").append("svg:svg")
       // .attr("width", width * 3)
       // .attr("height", 50)
