@@ -10,3 +10,8 @@
 - Zoom in (
 - https://observablehq.com/@d3/zoomable-sunburst)
 - Add wrapping for breadcrumbs
+
+## NOTES
+Avoid needing to import CSS into JS when using webpack by using it as an entry.
+
+https://stackoverflow.com/questions/51807092/is-it-possible-to-let-webpack-bundle-css-without-import-css-in-my-entry-js

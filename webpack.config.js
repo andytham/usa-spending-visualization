@@ -3,7 +3,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
 	entry: [
-		'./main.js'
+		'./main.js',
+		'./styles.scss'
 	],
 	output: {
 		path: path.resolve(__dirname, 'build'),
@@ -18,7 +19,7 @@ const config = {
 			},
 			{
         test: /\.(s*)css$/,
-				use: [MiniCssExtractPlugin.loader, 'sass-loader']
+				use: [MiniCssExtractPlugin.loader, 'css-loader','sass-loader']
 			}
 		]
 	},
