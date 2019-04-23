@@ -44,6 +44,7 @@ d3.text(year + ".csv").then((text) => {
 
 
 
+
 // parse through the CSV and create a JSON hierarchy for d3 to use
 // there should be a way to make this cleaner
 function buildHierarchy(csv){
@@ -143,7 +144,16 @@ console.log(nodes);
 		// console.log(sum);
 	// draws the "blocks"
 	//there are 95 children but are too small to see, 30 is about all that is visible
-	let color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30))
+	let colors = {
+		"2017": d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30)),
+		"2018": d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#bf265b", "#2A4858"), 30))
+	}
+	let color;
+	if (year == "2017"){
+		color = d3.scaleOrdinal(d3.quantize(d3.interpolateHcl("#fafa6e", "#2A4858"), 30))
+	} else if (year == "2018"){
+	
+	}
 	var path = visualization.data([json]).selectAll("path")
 		.data(nodes)
 		// .enter().append("svg:path")
@@ -152,7 +162,7 @@ console.log(nodes);
 		.attr("d", (d)=>{ return arc(d)})
 		// .attr("fill-rule", "evenodd")
 		// .style("fill", function(d) { return colors[d.data.name] || color(d); })
-		.style("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name)})
+		.style("fill", d => { while (d.depth > 1) d = d.parent; return colors[year](d.data.name)})
 		.attr("fill-opacity", d => 2.5 / d.depth)
 		.style("opacity", 1)
 		.on("mouseover", mouseover)
